@@ -1,0 +1,60 @@
+﻿@page "/auth/register"
+@layout AuthLayout
+
+
+<PageTitle>Register</PageTitle>
+
+<div class="d-flex justify-content-center align-items-start" style="margin-top: 5vh;">
+    <div class="col-md-4">
+        <section class="text-center p-4 rounded shadow bg-white">
+            <h1 class="text-center">Register</h1>
+            <StatusMessage Message="@errorMessage" />
+            <EditForm Model="Input" method="post" OnValidSubmit="RegisterUser" FormName="register">
+                <DataAnnotationsValidator />
+                <h2 class="text-center">Create a new account.</h2>
+                <hr />
+                <ValidationSummary class="text-danger" role="alert" />
+
+                <div class="form-floating mb-3">
+                    <InputText @bind-Value="Input.FirstName" class="form-control" aria-required="true" placeholder="John" />
+                    <label for="firstName">FirstName</label>
+                    <ValidationMessage For="() => Input.FirstName" class="text-danger" />
+                </div>
+
+                <div class="form-floating mb-3">
+                    <InputText @bind-Value="Input.LastName" class="form-control" aria-required="true" placeholder="Doe" />
+                    <label for="lastName">LastName</label>
+                    <ValidationMessage For="() => Input.LastName" class="text-danger" />
+                </div>
+
+                <div class="form-floating mb-3">
+                    <InputDate @bind-Value="Input.DateofBirth" class="form-control" aria-required="true" />
+                    <label for="birthDate">BirthDate</label>
+                    <ValidationMessage For="() => Input.DateofBirth" class="text-danger" />
+                </div>
+
+                <div class="form-floating mb-3">
+                    <InputText @bind-Value="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
+                    <label for="email">Email</label>
+                    <ValidationMessage For="() => Input.Email" class="text-danger" />
+                </div>
+                <div class="form-floating mb-3">
+                    <InputText type="password" @bind-Value="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
+                    <label for="password">Password</label>
+                    <ValidationMessage For="() => Input.Password" class="text-danger" />
+                </div>
+                <div class="form-floating mb-3">
+                    <InputText type="password" @bind-Value="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
+                    <label for="confirm-password">Confirm Password</label>
+                    <ValidationMessage For="() => Input.ConfirmPassword" class="text-danger" />
+                </div>
+                <button type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
+                <div>
+                    <p>
+                        <a href="auth/login">Already a user</a>
+                    </p>
+                </div>
+            </EditForm>
+        </section>
+    </div>
+</div>
