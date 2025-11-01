@@ -28,6 +28,9 @@ namespace DemoProject.API
                 configuration.ReadFrom.Configuration(context.Configuration);
             });
 
+            builder.Services.AddScoped<IUserEmailStore<ApplicationUser>>(sp =>
+          (IUserEmailStore<ApplicationUser>)sp.GetRequiredService<IUserStore<ApplicationUser>>());
+
             builder.Services.AddSwaggerGen(c =>
             {
                 c.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
@@ -58,8 +61,11 @@ namespace DemoProject.API
 
             builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection(JwtSettings.SectionName));
 
+            builder.Services.Configure<MailerSendSettings>(builder.Configuration.GetSection(MailerSendSettings.SectionName));
+
             builder.Services.AddScoped<IAuthService, AuthService>();
             builder.Services.AddScoped<IUserService, UserService>();
+            builder.Services.AddScoped<IEmailSender, EmailSenderService>();
 
 
 

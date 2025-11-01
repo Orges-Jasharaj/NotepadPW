@@ -10,11 +10,12 @@ namespace DemoProject.API.Services.Implementation
     public class NoteService : INoteService
     {
         private readonly ApplicationDbContext _context;
+        private readonly ILogger<NoteService> _logger;
 
-
-        public NoteService(ApplicationDbContext context)
+        public NoteService(ApplicationDbContext context,ILogger<NoteService> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         
@@ -34,6 +35,8 @@ namespace DemoProject.API.Services.Implementation
                 };
                 _context.Notes.Add(newNote);
                 await _context.SaveChangesAsync();
+                _logger.LogInformation("Note created with URL: {Url}", createNoteRequestDto.Url);
+              
                 return ResponseDto<bool>.SuccessResponse(true, "Note created successfully."); 
             }
             existingNote.Content = createNoteRequestDto.Content;
@@ -41,6 +44,7 @@ namespace DemoProject.API.Services.Implementation
 
             _context.Notes.Update(existingNote);
             await _context.SaveChangesAsync();
+            _logger.LogInformation("Note updated with URL: {Url}", createNoteRequestDto.Url);
             return ResponseDto<bool>.SuccessResponse(true, "Note updated successfully.");
         }
 
@@ -77,6 +81,7 @@ namespace DemoProject.API.Services.Implementation
             _context.Notes.Update(existingNote);
 
             await _context.SaveChangesAsync();
+            _logger.LogInformation("Note URL changed from {OldUrl} to {NewUrl}", changeUrlDto.OldUrl, changeUrlDto.NewUrl);
             return ResponseDto<bool>.SuccessResponse(true, "URL changed successfully.");
         }
 

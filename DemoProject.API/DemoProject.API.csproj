@@ -27,4 +27,10 @@
 		<ProjectReference Include="..\DemoProject.ServiceDefaults\DemoProject.ServiceDefaults.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+		<None Update="Template\WelcomeEmail.html">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
+
 </Project>

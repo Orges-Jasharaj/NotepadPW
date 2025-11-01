@@ -1,0 +1,93 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome Email</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            background: #ffffff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+
+        .header {
+            background-color: #007bff;
+            color: #ffffff;
+            text-align: center;
+            padding: 20px;
+        }
+
+            .header h1 {
+                margin: 0;
+                font-size: 24px;
+            }
+
+        .content {
+            padding: 20px;
+            color: #333333;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 12px 24px;
+            margin: 20px 0;
+            background-color: #007bff;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        .footer {
+            background-color: #f4f4f4;
+            text-align: center;
+            padding: 15px;
+            font-size: 13px;
+            color: #777777;
+        }
+
+        @media screen and (max-width: 600px) {
+            .content, .header, .footer {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Welcome to [AppName]</h1>
+        </div>
+        <div class="content">
+            <p>Hi [FirstName] [LastName],</p>
+            <p>We’re excited to have you join <strong>[AppName]</strong>. You’re all set to start exploring.</p>
+            <p>Here’s what you can do next:</p>
+            <ul>
+                <li>Access your dashboard</li>
+                <li>Update your profile</li>
+                <li>Check out our quick start guide</li>
+            </ul>
+            <p style="text-align: center;">
+                <a href="[Link]" class="button">Get Started</a>
+            </p>
+            <p>If you have any questions, just reply to this email—we’re here to help.</p>
+            <p>Cheers,<br>The [AppName] Team</p>
+        </div>
+        <div class="footer">
+            &copy; 2025 [AppName]. All rights reserved.
+        </div>
+    </div>
+</body>
+</html>

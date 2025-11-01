@@ -10,11 +10,14 @@ namespace DemoProject.API.Services.Implementation
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger<UserService> _logger;
+        private readonly IEmailSender _emailSender;
 
-        public UserService(UserManager<ApplicationUser> userManager, ILogger<UserService> logger)
+        public UserService(UserManager<ApplicationUser> userManager, ILogger<UserService> logger, IEmailSender emailSender)
         {
             _userManager = userManager;
             _logger = logger;
+            _emailSender = emailSender;
+
         }
 
         public async Task<ResponseDto<bool>> ChangeUserPassword(ChangePasswordRequestDto changePasswordDto)
@@ -29,6 +32,7 @@ namespace DemoProject.API.Services.Implementation
             if (result.Succeeded)
             {
                 _logger.LogInformation("Password changed successfully for user with ID: {UserId}", changePasswordDto.UserId);
+                _emailSender.SendEmail(user.Email, "Password Changed", "Your password has been changed successfully.");
                 return ResponseDto<bool>.SuccessResponse(true, "Password changed successfully");
             }
             var errors = result.Errors.Select(e => new ApiError
