@@ -58,12 +58,21 @@ namespace DemoProject.Client.Service
             NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(user)));
         }
 
-        public void NotifyUserLogout()
+        public async Task NotifyUserLogout()
         {
+            // Remove tokens from local storage
+            await _localStorage.RemoveItemAsync("authToken");
+            await _localStorage.RemoveItemAsync("refreshToken");
+
+            // Optionally clear any other stored auth-related keys here
+
+            // Notify authentication state changed (anonymous user)
             var identity = new ClaimsIdentity();
             var user = new ClaimsPrincipal(identity);
             NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(user)));
         }
+
+        //todo: handle errors use differnet http client factory
         public async Task<string> RefreshTokenAsync()
         {
             var refreshToken = await _localStorage.GetItemAsync<string>("refreshToken");

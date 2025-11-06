@@ -15,30 +15,35 @@ namespace DemoProject.Client.Service
             _httpClientFactory = httpClientFactory;
         }
 
-        public async Task<string> GetNoteByUrl(string url)
+        public async Task<GetNoteByUrlDto?> GetNoteByUrl(string url,string password = null)
         {
             try
             {
                 var client = _httpClientFactory.CreateClient("NoteApi");
+                var body = new GetNoteByUrlRequestDto
+                {
+                    Url = url,
+                    Passwrod = password
+                };
 
-                var response = await client.GetAsync($"{url}");
+                var response = await client.PostAsJsonAsync("GetNoteByUrl", body);
 
                 response.EnsureSuccessStatusCode();
 
-                var noteResponse = await response.Content.ReadFromJsonAsync<ResponseDto<string>>();
+                var noteResponse = await response.Content.ReadFromJsonAsync<ResponseDto<GetNoteByUrlDto>>();
 
                 //var note = JsonSerializer.Deserialize<ResponseDto<string>>(noteResponse);
 
-                if(noteResponse.Success)
+                if (noteResponse.Success)
                 {
                     return noteResponse.Data;
                 }
-                return string.Empty;
-                
+                return null;
+
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                return string.Empty;
+                return null;
             }
         }
 
@@ -99,6 +104,59 @@ namespace DemoProject.Client.Service
             }
         }
 
+        public async Task<GetUserNoteResponseDto> GetUserNotes()
+        {
+            try
+            {
+                var client = _httpClientFactory.CreateClient("NoteApi");
 
+
+
+                var response = await client.GetAsync("GetUserNotes");
+
+                response.EnsureSuccessStatusCode();
+
+                var responseBody = await response.Content.ReadFromJsonAsync<ResponseDto<GetUserNoteResponseDto>>();
+
+                if (responseBody.Success)
+                {
+                    return responseBody.Data;
+                }
+                return new GetUserNoteResponseDto();
+            }
+            catch (Exception ex)
+            {
+                return new GetUserNoteResponseDto();
+            }
+        }
+
+        public async Task<bool> SetPassword(string url, string password, bool proctecme=false)
+        {
+
+            try
+            {
+                var dto = new SetPasswordDto
+                {
+                    Url = url,
+                    Password = password,
+                    ProtectForMe = proctecme
+                };
+                var client = _httpClientFactory.CreateClient("NoteApi");
+                var response = await client.PostAsJsonAsync("SetPassword", dto);
+                response.EnsureSuccessStatusCode();
+                var responseBody = await response.Content.ReadFromJsonAsync<ResponseDto<bool>>();
+                if (responseBody.Success)
+                {
+                    return true;
+                }
+                return false;
+
+
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
     }
 }

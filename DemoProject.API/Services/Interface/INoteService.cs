@@ -6,8 +6,10 @@ namespace DemoProject.API.Services.Interface
     public interface INoteService
     {
         Task<ResponseDto<bool>> CreateNote(CreateNoteRequestDto createNoteRequestDto);
-        Task<ResponseDto<string>> GetNoteByUrl(string url);
+        Task<ResponseDto<GetNoteByUrlDto>> GetNoteByUrl(GetNoteByUrlRequestDto getNoteByUrlRequestDto);
         Task<ResponseDto<bool>> ChangeUrl(ChangeUrlRequestDto changeUrlDto);
+        Task<ResponseDto<GetUserNoteResponseDto>> GetUserNotes();
+        Task<ResponseDto<bool>> SetPassword(SetPasswordDto password);   
 
     }
 }

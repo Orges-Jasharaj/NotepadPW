@@ -1,21 +1,91 @@
-﻿@inherits LayoutComponentBase
+﻿@using DemoProject.Client.Exctension
+@using DemoProject.Client.Service
+@inherits LayoutComponentBase
+@inject NavigationManager NavigationManager
+@inject JwtAuthenticationStateProvider JwtAuthenticationStateProvider
+
 <HeadContent>
-    <RadzenTheme Theme="material" />
+	<RadzenTheme Theme="material" />
 </HeadContent>
 
 
 <div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
+	<AuthorizeView>
+		<Authorized>
+			<div class="sidebar">
+				<NavMenu />
+			</div>
+		</Authorized>
+	</AuthorizeView>
 
-    <main>
-        <div class="top-row px-4">
-            <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
-        </div>
+	<main>
+		<div class="top-row px-4">
+			<AuthorizeView>
+				<Authorized>
+					<div class="auth-actions">
+						<NavLink class="nav-link centered-login" href="/Account/Manage"> @context.User.GetUserFullName()</NavLink>
+						<button class="btn btn-primary" @onclick="Logout">Logout</button>
+					</div>
+				</Authorized>
+				<NotAuthorized>
+					<div class="login-container">
+						<NavLink class="nav-link centered-login" href="@($"/auth/login?returnUrl={Uri.EscapeDataString(NavigationManager.Uri)}")">
+							Log in
+						</NavLink>
+					</div>
+				</NotAuthorized>
+			</AuthorizeView>
+		</div>
 
-        <article class="content px-4">
-            @Body
-        </article>
-    </main>
+		<article class="content px-4">
+			@Body
+		</article>
+	</main>
 </div>
+
+<style>
+	.top-row {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+	}
+
+	.auth-actions {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+	}
+
+		.auth-actions .greeting {
+			margin: 0;
+		}
+
+	.login-container {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: auto;
+	}
+
+	.centered-login {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		padding: 0.25rem 0.5rem;
+		text-decoration: none;
+		color: inherit;
+		background: transparent;
+		border: none;
+	}
+</style>
+
+
+
+@code {
+	private async Task Logout()
+	{
+		await JwtAuthenticationStateProvider.NotifyUserLogout();
+		// navigate to home after logout
+		NavigationManager.NavigateTo(NavigationManager.Uri, true);
+	}
+}

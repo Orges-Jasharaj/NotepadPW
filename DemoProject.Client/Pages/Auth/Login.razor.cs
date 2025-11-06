@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DemoProject.Client.Pages.Auth
 {
-   
+
     public partial class Login
     {
         private string? errorMessage;
@@ -26,6 +26,17 @@ namespace DemoProject.Client.Pages.Auth
         [Inject]
         private JwtAuthenticationStateProvider JwtAuthenticationStateProvider { get; set; } = default!;
 
+
+        private string? returnUrl;
+
+
+        protected override Task OnInitializedAsync()
+        {
+            var uri = new Uri(NavigationManager.Uri);
+            var query = System.Web.HttpUtility.ParseQueryString(uri.Query);
+            returnUrl = query["returnUrl"];
+            return base.OnInitializedAsync();
+        }
         public async Task LoginUser()
         {
 
@@ -43,8 +54,7 @@ namespace DemoProject.Client.Pages.Auth
 
                 // Notify the CustomAuthStateProvider
                 JwtAuthenticationStateProvider.NotifyUserAuthentication(result.Data.AccessToken);
-
-                NavigationManager.NavigateTo("/", true);
+                NavigationManager.NavigateTo(returnUrl ?? "/");
             }
             else
             {

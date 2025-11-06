@@ -6,5 +6,8 @@ namespace DemoProject.API.Services.Interface
     public interface IUserService
     {
         Task<ResponseDto<bool>> ChangeUserPassword(ChangePasswordRequestDto changePasswordDto);
+
+
+
     }
 }

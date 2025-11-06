@@ -6,8 +6,11 @@
         public string? Content { get; set; } 
         public string Url { get; set; }
         public bool IsSecure { get; set; }
+        public string ShortDescription { get; set; }
         public string? PasswordHash { get; set; }
         public DateTime CreatedAt { get; set; } 
         public DateTime? UpdatedAt { get; set; }
+        public string? UserId { get; set; }
+        public ApplicationUser? User { get; set; }
     }
 }

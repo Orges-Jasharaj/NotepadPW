@@ -1,5 +1,6 @@
 ﻿using DemoProject.API.Services.Interface;
 using DemoProject.DataModels.Dto.Request;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,10 +19,10 @@ namespace DemoProject.API.Controllers
 
 
 
-        [HttpGet("{url}")]
-        public async Task<IActionResult> GetNoteByUrl(string url)
+        [HttpPost("GetNoteByUrl")]
+        public async Task<IActionResult> GetNoteByUrl([FromBody] GetNoteByUrlRequestDto dto)
         {
-            return Ok(await _noteService.GetNoteByUrl(url));
+            return Ok(await _noteService.GetNoteByUrl(dto));
         }
 
         [HttpPost]
@@ -34,6 +35,19 @@ namespace DemoProject.API.Controllers
         public async Task<IActionResult> ChangeUrl([FromBody] ChangeUrlRequestDto changeUrlDto)
         {
             return Ok(await _noteService.ChangeUrl(changeUrlDto));
+        }
+
+        [ Authorize]
+        [HttpGet("GetUserNotes")]
+        public async Task<IActionResult> GetUserNotes()
+        {
+            return Ok(await _noteService.GetUserNotes());
+        }
+
+        [HttpPost("SetPassword")]
+        public async Task<IActionResult> SetPassword([FromBody] SetPasswordDto setPassword)
+        {
+            return Ok(await _noteService.SetPassword(setPassword));
         }
 
 

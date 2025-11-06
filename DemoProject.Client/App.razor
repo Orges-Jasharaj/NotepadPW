@@ -1,29 +1,14 @@
-﻿@using DemoProject.Client.Pages
-@using Microsoft.AspNetCore.Components.Authorization
-<CascadingAuthenticationState>
-    <Router AppAssembly="@typeof(App).Assembly" OnNavigateAsync="HandleNavigation">
+﻿<CascadingAuthenticationState>
+    <Router AppAssembly="@typeof(App).Assembly">
         <Found Context="routeData">
-            <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
+            <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
+            <FocusOnNavigate RouteData="@routeData" Selector="h1" />
         </Found>
         <NotFound>
-            <p>Sorry, nothing found at this address.</p>
+            <PageTitle>Not found</PageTitle>
+            <LayoutView Layout="@typeof(MainLayout)">
+                <p role="alert">Sorry, there's nothing at this address.</p>
+            </LayoutView>
         </NotFound>
     </Router>
 </CascadingAuthenticationState>
-@code {
-    [Inject] private NavigationManager Navigation { get; set; }
-    [Inject] private AuthenticationStateProvider AuthProvider { get; set; }
-
-    private async Task HandleNavigation(NavigationContext args)
-    {
-        var authState = await AuthProvider.GetAuthenticationStateAsync();
-        var user = authState.User;
-
-        // If user is not authenticated AND route does NOT start with "auth"
-        if (!user.Identity.IsAuthenticated &&
-            !args.Path.StartsWith("auth", StringComparison.OrdinalIgnoreCase))
-        {
-            Navigation.NavigateTo("auth/login", true);
-        }
-    }
-}

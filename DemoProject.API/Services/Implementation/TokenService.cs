@@ -27,9 +27,9 @@ namespace DemoProject.API.Services.Implementation
 
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.NameIdentifier, user.Id),
-                new Claim(ClaimTypes.Email, user.UserName),
-                new Claim(ClaimTypes.Name, user.FirstName + " " + user.LastName),
+                new Claim(JwtRegisteredClaimNames.Sub, user.Id),
+                new Claim(JwtRegisteredClaimNames.Email, user.UserName),
+                new Claim(JwtRegisteredClaimNames.Name, user.FirstName + " " + user.LastName),
             };
 
             foreach (var role in roles)

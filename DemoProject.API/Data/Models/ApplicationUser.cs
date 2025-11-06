@@ -10,6 +10,6 @@ namespace DemoProject.API.Data.Models
 
         public string? RefreshToken { get; set; }
         public DateTime? RefreshTokenExpiryTime { get; set; }
-
+        public ICollection<Note>? Notes { get; set; }
     }
 }

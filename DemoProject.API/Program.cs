@@ -66,6 +66,13 @@ namespace DemoProject.API
             builder.Services.AddScoped<IAuthService, AuthService>();
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<IEmailSender, EmailSenderService>();
+            builder.Services.AddScoped<IClaimsService, ClaimsService>();
+
+
+
+
+
+            builder.Services.AddHttpContextAccessor();
 
 
 

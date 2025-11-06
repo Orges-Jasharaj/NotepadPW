@@ -1,5 +1,81 @@
-﻿@page "/"
-@attribute [Microsoft.AspNetCore.Authorization.Authorize()]
+﻿@page "/{url?}"
+@using DemoProject.Client.Pages.NotePadPW
+@using DemoProject.Client.Service
+
+<RadzenHtmlEditor @bind-Value=@htmlValue Input="OnInput" Execute="OnExecute" style="height: 450px;" Disabled="@IsEditorDisabled">
+	<RadzenHtmlEditorUndo />
+	<RadzenHtmlEditorRedo />
+
+	<RadzenHtmlEditorSeparator />
+
+	<RadzenHtmlEditorBold />
+	<RadzenHtmlEditorItalic />
+	<RadzenHtmlEditorUnderline />
+	<RadzenHtmlEditorStrikeThrough />
+
+	<RadzenHtmlEditorSeparator />
+
+	<RadzenHtmlEditorAlignLeft />
+	<RadzenHtmlEditorAlignCenter />
+	<RadzenHtmlEditorAlignRight />
+
+	<RadzenHtmlEditorSeparator />
+
+	<RadzenHtmlEditorIndent />
+	<RadzenHtmlEditorOutdent />
+	<RadzenHtmlEditorUnorderedList />
+	<RadzenHtmlEditorOrderedList />
+
+	<RadzenHtmlEditorSeparator />
+
+	<RadzenHtmlEditorColor />
+	<RadzenHtmlEditorBackground />
+
+	<RadzenHtmlEditorSeparator />
+
+	<RadzenHtmlEditorRemoveFormat />
+	<RadzenHtmlEditorSubscript />
+	<RadzenHtmlEditorSuperscript />
+
+	<RadzenHtmlEditorSeparator />
+
+	<RadzenHtmlEditorLink />
+	<RadzenHtmlEditorUnlink />
+	<RadzenHtmlEditorImage />
+	<RadzenHtmlEditorFontName />
+	<RadzenHtmlEditorFontSize />
+	<RadzenHtmlEditorFormatBlock />
+
+	<RadzenHtmlEditorSeparator />
 
 
-<p>You are Authorized</p>
+	<RadzenHtmlEditorCustomTool CommandName="ChangeUrl" Icon="edit"/>
+	<RadzenHtmlEditorCustomTool CommandName="SetPassword" Icon="password" />
+</RadzenHtmlEditor>
+
+@* <ChangeUrlComponent Value="@url" isOpen="IsOpen" OnSave="OnModalSave"/>
+
+<SetPassworddComponent Value="@password" IsOpen="IsOpenPassword" OnSave="OnModalSavePassword" OnProtectForMe="OnProtecMeModalSave" />
+
+<PutPasswordComponent Value="@passwordToOpen" IsOpen="IsOpenPutPassword" OnSave="OnModalSavePutPassword" /> *@
+
+<SetPassworddComponent Value="@password"
+					   IsOpen="@IsOpenPassword"
+					   OnSave="OnModalSavePassword"
+					   OnProtectForMe="OnProtecMeModalSave"
+					   OnClose="() => IsOpenPassword = false" />
+
+<ChangeUrlComponent Value="@url"
+					IsOpen="@IsOpen"
+					OnSave="OnModalSave"
+					OnClose="() => IsOpen = false" />
+
+<PutPasswordComponent Value="@passwordToOpen"
+					  IsOpen="@IsOpenPutPassword"
+					  OnSave="OnModalSavePutPassword"
+					  OnClose="() => IsOpenPutPassword = false" />
+
+@* <button class="btn btn-primary" @onclick="OnButtonClick">CHANGE URL</button> *@
+
+
+
