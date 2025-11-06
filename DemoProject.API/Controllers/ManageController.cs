@@ -10,10 +10,10 @@ namespace DemoProject.API.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class UserController : ControllerBase
+    public class ManageController : ControllerBase
     {
-        private readonly IUserService _userService;
-        public UserController(IUserService userService)
+        private readonly IManageService _userService;
+        public ManageController(IManageService userService)
         {
             _userService = userService;
         }
@@ -21,9 +21,7 @@ namespace DemoProject.API.Controllers
         [HttpPost("changepassword")]
         public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordRequestDto changePasswordDto)
         {
-            var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
-            changePasswordDto.UserId = userId;
-            
+          
             return Ok(await _userService.ChangeUserPassword(changePasswordDto));
         }
     }

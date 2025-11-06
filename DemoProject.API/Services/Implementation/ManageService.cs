@@ -6,23 +6,26 @@ using Microsoft.AspNetCore.Identity;
 
 namespace DemoProject.API.Services.Implementation
 {
-    public class UserService : IUserService
+    public class ManageService : IManageService
     {
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly ILogger<UserService> _logger;
+        private readonly ILogger<ManageService> _logger;
         private readonly IEmailSender _emailSender;
+        private readonly IClaimsService _claimsService;
 
-        public UserService(UserManager<ApplicationUser> userManager, ILogger<UserService> logger, IEmailSender emailSender)
+        public ManageService(UserManager<ApplicationUser> userManager, ILogger<ManageService> logger, IEmailSender emailSender, IClaimsService claimsService)
         {
             _userManager = userManager;
             _logger = logger;
             _emailSender = emailSender;
+            _claimsService = claimsService;
 
         }
 
         public async Task<ResponseDto<bool>> ChangeUserPassword(ChangePasswordRequestDto changePasswordDto)
         {
-            var user = await _userManager.FindByIdAsync(changePasswordDto.UserId);
+            var userId = _claimsService.GetCurrentUserId();
+            var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
             {
                 return ResponseDto<bool>.Failure("User does not exist");
@@ -31,7 +34,7 @@ namespace DemoProject.API.Services.Implementation
             var result = await _userManager.ChangePasswordAsync(user, changePasswordDto.OldPassword, changePasswordDto.NewPassword);
             if (result.Succeeded)
             {
-                _logger.LogInformation("Password changed successfully for user with ID: {UserId}", changePasswordDto.UserId);
+                _logger.LogInformation("Password changed successfully for user with ID: {UserId}", userId);
                 _emailSender.SendEmail(user.Email, "Password Changed", "Your password has been changed successfully.");
                 return ResponseDto<bool>.SuccessResponse(true, "Password changed successfully");
             }

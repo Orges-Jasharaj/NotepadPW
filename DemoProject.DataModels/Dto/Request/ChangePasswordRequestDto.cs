@@ -13,6 +13,5 @@ namespace DemoProject.DataModels.Dto.Request
         public string OldPassword { get; set; }
         [Required]
         public string NewPassword { get; set; }
-        public string? UserId { get; set; }
     }
 }

@@ -28,12 +28,16 @@ namespace DemoProject.Client
             builder.Services.AddScoped<AuthService>();
             builder.Services.AddScoped<AuthTokenHandler>();
             builder.Services.AddScoped<NoteService>(); 
+            builder.Services.AddScoped<ManageService>();
+
             builder.Services.AddHttpClient("AuthApi", client => client.BaseAddress = new Uri("https://localhost:7086/api/Auth/")).AddHttpMessageHandler<AuthTokenHandler>();
             builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("AuthApi"));
 
             builder.Services.AddHttpClient("NoteApi", client => client.BaseAddress = new Uri("https://localhost:7086/api/Notes/")).AddHttpMessageHandler<AuthTokenHandler>();
             builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("NoteApi"));
 
+            builder.Services.AddHttpClient("ManageApi", client => client.BaseAddress = new Uri("https://localhost:7086/api/Manage/")).AddHttpMessageHandler<AuthTokenHandler>();
+            builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("ManageApi"));
 
 
             await builder.Build().RunAsync();

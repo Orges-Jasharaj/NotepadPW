@@ -64,7 +64,7 @@ namespace DemoProject.API
             builder.Services.Configure<MailerSendSettings>(builder.Configuration.GetSection(MailerSendSettings.SectionName));
 
             builder.Services.AddScoped<IAuthService, AuthService>();
-            builder.Services.AddScoped<IUserService, UserService>();
+            builder.Services.AddScoped<IManageService, ManageService>();
             builder.Services.AddScoped<IEmailSender, EmailSenderService>();
             builder.Services.AddScoped<IClaimsService, ClaimsService>();
 

@@ -1,0 +1,44 @@
+﻿@page "/Account/Manage"
+
+@using System.Security.Claims
+@using DemoProject.Client.Pages.Manage.Layout
+@using DemoProject.Client.Exctension
+@layout ManageLayout
+@attribute [Microsoft.AspNetCore.Authorization.Authorize]
+
+<PageTitle>Profile</PageTitle>
+
+<h3>Profile</h3>
+<StatusMessage />
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="form-floating mb-3">
+            <input type="text" value="@username" class="form-control" placeholder="Please choose your username." disabled />
+            <label for="username" class="form-label">Username</label>
+        </div>
+    </div>
+</div>
+
+@code {
+    private string? username;
+
+    [CascadingParameter]
+    private Task<AuthenticationState> AuthenticationStateTask { get; set; } = default!;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateTask;
+        var user = authState.User;
+
+        if (user?.Identity?.IsAuthenticated == true)
+        {
+            // use the robust extension to resolve email/username
+            username = user.GetUserEmail();
+        }
+        else
+        {
+            username = null;
+        }
+    }
+}
