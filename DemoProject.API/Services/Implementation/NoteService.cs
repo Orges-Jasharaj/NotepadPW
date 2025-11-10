@@ -203,10 +203,10 @@ namespace DemoProject.API.Services.Implementation
             plainText = plainText.Trim();
 
             // Take only first 10 characters
-            string shortText = plainText.Length <= 10 ? plainText : plainText.Substring(0, 10);
+            string shortText = plainText.Length <= 20    ? plainText : plainText.Substring(0, 20);
 
             // Optionally add "..." if truncated
-            if (plainText.Length > 10)
+            if (plainText.Length > 20)
                 shortText += "...";
 
             return shortText;
@@ -282,35 +282,43 @@ namespace DemoProject.API.Services.Implementation
 
         public async Task<ResponseDto<string>> SummarizeNoteAsync(string url)
         {
-            var note = await _context.Notes.FirstOrDefaultAsync(x => x.Url == url);
-
-            if (note == null || string.IsNullOrEmpty(note.Content))
+            try
             {
-                return ResponseDto<string>.Failure("");
-            }
+                var note = await _context.Notes.FirstOrDefaultAsync(x => x.Url == url);
 
-            string plainText = Regex.Replace(note.Content, "<.*?>", string.Empty);
-            plainText = System.Net.WebUtility.HtmlDecode(plainText).Trim();
+                if (note == null || string.IsNullOrEmpty(note.Content))
+                {
+                    return ResponseDto<string>.Failure("");
+                }
 
-            string systemPrompt = @"
+                string plainText = Regex.Replace(note.Content, "<.*?>", string.Empty);
+                plainText = System.Net.WebUtility.HtmlDecode(plainText).Trim();
+
+                string systemPrompt = @"
 You are a professional writing assistant that summarizes notes into concise, clear, and informative short descriptions.
 Focus on main idea and key details. Keep summary under 30 words.
 Do not add extra commentary — only return the summary text.";
 
-            var messages = new List<ChatMessage>
+                var messages = new List<ChatMessage>
         {
             new ChatMessage(ChatRole.System, systemPrompt),
             new ChatMessage(ChatRole.User, plainText)
         };
 
-            var responseText = "";
-            await foreach (var update in _chatClient.GetStreamingResponseAsync(messages))
-            {
-                var chunk = $"data: {update.Text}\n\n";
-                responseText += update.Text;
-            }
+                var responseText = "";
+                await foreach (var update in _chatClient.GetStreamingResponseAsync(messages))
+                {
+                    var chunk = $"data: {update.Text}\n\n";
+                    responseText += update.Text;
+                }
 
-            return ResponseDto<string>.SuccessResponse(responseText);
+                return ResponseDto<string>.SuccessResponse(responseText);
+            }
+            catch (Exception e)
+            { 
+                _logger.LogError(e, "Error summarizing note with URL: {Url}", url);
+                return ResponseDto<string>.Failure("");
+            }
         }
 
         public async Task<byte[]> GeneratePdf(string url)

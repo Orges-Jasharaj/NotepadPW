@@ -91,11 +91,6 @@ namespace DemoProject.API
 
                 // Use GitHub-hosted GPT model
                 var chatClient = openAiClient.GetChatClient("gpt-4o-mini").AsIChatClient();
-
-                // Add useful middleware
-                //chatClient.UseFunctionInvocation();
-                //chatClient.UseLogging();
-
                 return chatClient;
             });
 
@@ -131,8 +126,8 @@ namespace DemoProject.API
                 options.Password.RequireLowercase = true;
                 options.Password.RequireNonAlphanumeric = false;
                 options.Password.RequireUppercase = true;
-                options.SignIn.RequireConfirmedAccount = true;
-                options.SignIn.RequireConfirmedEmail = true;
+                //options.SignIn.RequireConfirmedAccount = true;
+                //options.SignIn.RequireConfirmedEmail = true;
             }).AddEntityFrameworkStores<ApplicationDbContext>()
             .AddDefaultTokenProviders();
 
@@ -175,6 +170,16 @@ namespace DemoProject.API
                         y.AllowAnyOrigin()
                         .AllowAnyHeader()
                         .AllowAnyMethod();
+                        
+                    });
+
+            });
+            builder.Services.AddCors(x => {
+                x.AddPolicy("PadzyUI",
+                    y => {
+                        y.AllowAnyHeader()
+                         .AllowAnyMethod()
+                         .WithOrigins("http://padzy.runasp.net");
                     });
 
             });
@@ -183,9 +188,11 @@ namespace DemoProject.API
 
             app.MapDefaultEndpoints();
 
+            app.UseCors("PadzyUI");
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
+                app.UseCors("DemoClient");
                 app.MapOpenApi();
                 app.UseSwagger();
                 app.UseSwaggerUI(app =>
@@ -196,7 +203,7 @@ namespace DemoProject.API
 
             app.UseHttpsRedirection();
 
-            app.UseCors("DemoClient");
+
 
             app.UseMiddleware<ExceptionHandlingMiddleware>();
             
@@ -205,7 +212,6 @@ namespace DemoProject.API
 
             app.MapControllers();
 
-            app.UseCors("DemoClient");
 
             app.Run();
         }

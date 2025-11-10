@@ -30,13 +30,21 @@ namespace DemoProject.Client
             builder.Services.AddScoped<NoteService>(); 
             builder.Services.AddScoped<ManageService>();
 
-            builder.Services.AddHttpClient("AuthApi", client => client.BaseAddress = new Uri("https://localhost:7086/api/Auth/")).AddHttpMessageHandler<AuthTokenHandler>();
+            var baseApiUrl = "http://padzyapi.runasp.net/";
+           
+            if(builder.HostEnvironment.IsDevelopment())
+            {
+                baseApiUrl = "https://localhost:7086/";
+            }
+           
+            
+            builder.Services.AddHttpClient("AuthApi", client => client.BaseAddress = new Uri($"{baseApiUrl}api/Auth/")).AddHttpMessageHandler<AuthTokenHandler>();
             builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("AuthApi"));
 
-            builder.Services.AddHttpClient("NoteApi", client => client.BaseAddress = new Uri("https://localhost:7086/api/Notes/")).AddHttpMessageHandler<AuthTokenHandler>();
+            builder.Services.AddHttpClient("NoteApi", client => client.BaseAddress = new Uri($"{baseApiUrl}api/Notes/")).AddHttpMessageHandler<AuthTokenHandler>();
             builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("NoteApi"));
 
-            builder.Services.AddHttpClient("ManageApi", client => client.BaseAddress = new Uri("https://localhost:7086/api/Manage/")).AddHttpMessageHandler<AuthTokenHandler>();
+            builder.Services.AddHttpClient("ManageApi", client => client.BaseAddress = new Uri($"{baseApiUrl}api/Manage/")).AddHttpMessageHandler<AuthTokenHandler>();
             builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("ManageApi"));
 
 
