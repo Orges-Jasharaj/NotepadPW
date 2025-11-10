@@ -6,96 +6,96 @@
 <RadzenNotification></RadzenNotification>
 
 
-<RadzenHtmlEditor @bind-Value=@htmlValue Input="OnInput" Execute="OnExecute" style="height: 450px;" Disabled="@IsEditorDisabled">
-	<RadzenHtmlEditorUndo />
-	<RadzenHtmlEditorRedo />
+<div style="display: flex; justify-content: center; margin-top: 2rem;">
+    <div style="width: 85%;">
 
-	<RadzenHtmlEditorSeparator />
+        <RadzenHtmlEditor @bind-Value=@htmlValue Input="OnInput" Execute="OnExecute" style="height: 80vh;" Disabled="@IsEditorDisabled">
+            <RadzenHtmlEditorUndo />
+            <RadzenHtmlEditorRedo />
 
-	<RadzenHtmlEditorBold />
-	<RadzenHtmlEditorItalic />
-	<RadzenHtmlEditorUnderline />
-	<RadzenHtmlEditorStrikeThrough />
+            <RadzenHtmlEditorSeparator />
 
-	<RadzenHtmlEditorSeparator />
+            <RadzenHtmlEditorBold />
+            <RadzenHtmlEditorItalic />
+            <RadzenHtmlEditorUnderline />
+            <RadzenHtmlEditorStrikeThrough />
 
-	<RadzenHtmlEditorAlignLeft />
-	<RadzenHtmlEditorAlignCenter />
-	<RadzenHtmlEditorAlignRight />
+            <RadzenHtmlEditorSeparator />
 
-	<RadzenHtmlEditorSeparator />
+            <RadzenHtmlEditorAlignLeft />
+            <RadzenHtmlEditorAlignCenter />
+            <RadzenHtmlEditorAlignRight />
 
-	<RadzenHtmlEditorIndent />
-	<RadzenHtmlEditorOutdent />
-	<RadzenHtmlEditorUnorderedList />
-	<RadzenHtmlEditorOrderedList />
+            <RadzenHtmlEditorSeparator />
 
-	<RadzenHtmlEditorSeparator />
+            <RadzenHtmlEditorIndent />
+            <RadzenHtmlEditorOutdent />
+            <RadzenHtmlEditorUnorderedList />
+            <RadzenHtmlEditorOrderedList />
 
-	<RadzenHtmlEditorColor />
-	<RadzenHtmlEditorBackground />
+            <RadzenHtmlEditorSeparator />
 
-	<RadzenHtmlEditorSeparator />
+            <RadzenHtmlEditorColor />
+            <RadzenHtmlEditorBackground />
 
-	<RadzenHtmlEditorRemoveFormat />
-	<RadzenHtmlEditorSubscript />
-	<RadzenHtmlEditorSuperscript />
+            <RadzenHtmlEditorSeparator />
 
-	<RadzenHtmlEditorSeparator />
+            <RadzenHtmlEditorRemoveFormat />
+            <RadzenHtmlEditorSubscript />
+            <RadzenHtmlEditorSuperscript />
 
-	<RadzenHtmlEditorLink />
-	<RadzenHtmlEditorUnlink />
-	<RadzenHtmlEditorImage />
-	<RadzenHtmlEditorFontName />
-	<RadzenHtmlEditorFontSize />
-	<RadzenHtmlEditorFormatBlock />
+            <RadzenHtmlEditorSeparator />
 
-	<RadzenHtmlEditorSeparator />
+            <RadzenHtmlEditorLink />
+            <RadzenHtmlEditorUnlink />
+            <RadzenHtmlEditorImage />
+            <RadzenHtmlEditorFontName />
+            <RadzenHtmlEditorFontSize />
+            <RadzenHtmlEditorFormatBlock />
+
+            <RadzenHtmlEditorSeparator />
 
 
-	<RadzenHtmlEditorCustomTool CommandName="ChangeUrl" Icon="edit" />
-	<RadzenHtmlEditorCustomTool CommandName="SetPassword" Icon="password" />
+            <RadzenHtmlEditorCustomTool CommandName="ChangeUrl" Icon="edit" />
+            <RadzenHtmlEditorCustomTool CommandName="SetPassword" Icon="password" />
 
-	<AuthorizeView>
-		<Authorized>
-			<RadzenHtmlEditorCustomTool CommandName="GeneratePdf" Icon="picture_as_pdf" />
-		</Authorized>
-	</AuthorizeView>
-</RadzenHtmlEditor>
+            <AuthorizeView>
+                <Authorized>
+                    <RadzenHtmlEditorCustomTool CommandName="GeneratePdf" Icon="picture_as_pdf" />
+                </Authorized>
+            </AuthorizeView>
+        </RadzenHtmlEditor>
+    </div>
+</div>
 
-@* <ChangeUrlComponent Value="@url" isOpen="IsOpen" OnSave="OnModalSave"/>
-
-<SetPassworddComponent Value="@password" IsOpen="IsOpenPassword" OnSave="OnModalSavePassword" OnProtectForMe="OnProtecMeModalSave" />
-
-<PutPasswordComponent Value="@passwordToOpen" IsOpen="IsOpenPutPassword" OnSave="OnModalSavePutPassword" /> *@
 
 <SetPassworddComponent Value="@password"
-					   IsOpen="@IsOpenPassword"
-					   OnSave="OnModalSavePassword"
-					   OnProtectForMe="OnProtecMeModalSave"
-					   OnClose="() => IsOpenPassword = false" />
+                       IsOpen="@IsOpenPassword"
+                       OnSave="OnModalSavePassword"
+                       OnProtectForMe="OnProtecMeModalSave"
+                       OnClose="() => IsOpenPassword = false" />
 
 <ChangeUrlComponent Value="@url"
-					IsOpen="@IsOpen"
-					OnSave="OnModalSave"
-					OnClose="() => IsOpen = false" />
+                    IsOpen="@IsOpen"
+                    OnSave="OnModalSave"
+                    OnClose="() => IsOpen = false" />
 
 <PutPasswordComponent Value="@passwordToOpen"
-					  IsOpen="@IsOpenPutPassword"
-					  OnSave="OnModalSavePutPassword"
-					  OnClose="() => IsOpenPutPassword = false" />
+                      IsOpen="@IsOpenPutPassword"
+                      OnSave="OnModalSavePutPassword"
+                      OnClose="() => IsOpenPutPassword = false" />
 
 
 <AuthorizeView>
-	<Authorized>
-		<button class="floating-button" @onclick="OpenSummarizePanel">
-			✏️ Summarize
-		</button>
+    <Authorized>
+        <button class="floating-button" @onclick="OpenSummarizePanel">
+            ✏️ Summarize
+        </button>
 
-		<SummarizeComponent Text="@noteSummary" IsOpen="@showPanel"
-							IsLoading="@IsLoading"
-							OnClose="@(() => { showPanel = false; })" />
-	</Authorized>
+        <SummarizeComponent Text="@noteSummary" IsOpen="@showPanel"
+                            IsLoading="@IsLoading"
+                            OnClose="@(() => { showPanel = false; })" />
+    </Authorized>
 
 </AuthorizeView>
 

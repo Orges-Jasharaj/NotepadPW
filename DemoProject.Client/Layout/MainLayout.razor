@@ -24,7 +24,11 @@
 				<Authorized>
 					<div class="auth-actions">
 						<NavLink class="nav-link centered-login" href="/Account/Manage"> @context.User.GetUserFullName()</NavLink>
-						<button class="btn btn-primary" @onclick="Logout">Logout</button>
+						<button class="btn btn-danger d-flex align-items-center gap-1" @onclick="Logout">
+							<i class="bi bi-box-arrow-right"></i>
+							Logout
+						</button>
+
 					</div>
 				</Authorized>
 				<NotAuthorized>
