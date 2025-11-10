@@ -1,0 +1,64 @@
+﻿
+.rz-notification-info {
+    color: white !important;
+    background: #2196f3;
+    border-radius: 10px;
+    border-bottom-right-radius: 0px;
+}
+
+.rz-notification-warn {
+    color: white !important;
+    background: #ffc107;
+    border-radius: 10px;
+    border-bottom-right-radius: 0px;
+}
+
+.rz-notification-error {
+    color: white !important;
+    background: #dc3545;
+    border-radius: 10px;
+    border-bottom-right-radius: 0px;
+}
+
+.rz-notification-success {
+    color: white !important;
+    background: #3e9108;
+    border-radius: 10px;
+    border-bottom-right-radius: 0px;
+}
+
+.rz-notification-item {
+    color: white !important;
+    background-color: transparent !important;
+}
+
+.rz-notification-icon {
+    color: white !important;
+}
+
+.rz-progressbar-value {
+    background-color: white !important;
+}
+
+.rz-notification-close {
+    opacity: 1;
+}
+
+
+.floating-button {
+    position: fixed;
+    top: 40%;
+    right: 0;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 12px 16px;
+    border-radius: 6px 0 0 6px;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    z-index: 1100;
+}
+
+    .floating-button:hover {
+        background-color: #0056b3;
+    }

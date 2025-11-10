@@ -33,7 +33,7 @@ namespace DemoProject.Client.Service
                 Severity = notificationSeverity,
                 Summary = title,
                 Detail = message,
-                Duration = 30000,
+                Duration = 3000,
             });
         }
 
