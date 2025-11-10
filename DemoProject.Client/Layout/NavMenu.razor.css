@@ -6,6 +6,7 @@
     min-height: 3.5rem;
     background-color: #f7f7f7;
     border-bottom: 1px solid #d6d5d5;
+
 }
 
 .navbar-brand {
@@ -73,6 +74,18 @@
             background-color: white; /* subtle hover */
             color: #222222; /* keep text dark on hover */           
         }
+
+.recent-notes-header {
+    font-weight: 600;
+    font-size: 0.95rem;
+    padding: 0.75rem 0;
+    text-align: center; /* center the text */
+    border-bottom: 2px solid #d6d5d5;
+    width: 70%; /* border width */
+    margin: 0 auto 0.5rem auto; /* center the element horizontally and add bottom margin */
+}
+
+
 
 @media (min-width: 641px) {
     .navbar-toggler {
