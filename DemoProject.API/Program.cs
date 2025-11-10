@@ -74,6 +74,7 @@ namespace DemoProject.API
             builder.Services.AddScoped<IManageService, ManageService>();
             builder.Services.AddScoped<IEmailSender, EmailSenderService>();
             builder.Services.AddScoped<IClaimsService, ClaimsService>();
+            builder.Services.AddScoped<IPdfService, PdfService>();
 
 
             var githubToken = builder.Configuration["GitHubModels:Token"]
@@ -110,7 +111,7 @@ namespace DemoProject.API
             });
 
 
-
+            QuestPDF.Settings.License = QuestPDF.Infrastructure.LicenseType.Community;
 
 
             builder.Services.AddHttpContextAccessor();

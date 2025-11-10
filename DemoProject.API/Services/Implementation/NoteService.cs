@@ -17,14 +17,16 @@ namespace DemoProject.API.Services.Implementation
         private readonly ILogger<NoteService> _logger;
         private readonly IClaimsService _claimsService;
         private readonly IChatClient _chatClient;
+        private readonly IPdfService _pdfService;
 
 
-        public NoteService(ApplicationDbContext context, ILogger<NoteService> logger, IClaimsService claimsService, IChatClient chatClient)
+        public NoteService(ApplicationDbContext context, ILogger<NoteService> logger, IClaimsService claimsService, IChatClient chatClient, IPdfService pdfService)
         {
             _context = context;
             _logger = logger;
             _claimsService = claimsService;
             _chatClient = chatClient;
+            _pdfService = pdfService;
         }
 
 
@@ -309,6 +311,19 @@ Do not add extra commentary — only return the summary text.";
             }
 
             return ResponseDto<string>.SuccessResponse(responseText);
+        }
+
+        public async Task<byte[]> GeneratePdf(string url)
+        {
+            var note = await _context.Notes.FirstOrDefaultAsync(x => x.Url == url);
+
+            if(note is null)
+            {
+                return null;    
+            }
+
+            var pdfBytes = _pdfService.GeneratePdf(note.Content, note.Url);
+            return pdfBytes;
         }
     }
 }

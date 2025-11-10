@@ -1,5 +1,8 @@
 ﻿using DemoProject.DataModels.Dto.Request;
 using DemoProject.DataModels.Dto.Response;
+using Microsoft.JSInterop;
+using System;
+using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
@@ -188,6 +191,27 @@ namespace DemoProject.Client.Service
             catch (Exception ex)
             {
                 return false;
+            }
+        }
+        public async Task<byte[]?> DownloadPdf(string url)
+        {
+            try
+            {
+                var client = _httpClientFactory.CreateClient("NoteApi");
+
+                // Call the API endpoint
+                var response = await client.GetAsync($"GeneratePdf/{url}");
+
+                response.EnsureSuccessStatusCode();
+
+                // Read PDF as byte array
+                var pdfBytes = await response.Content.ReadAsByteArrayAsync();
+
+                return pdfBytes;
+            }
+            catch (Exception ex)
+            {
+                return null;
             }
         }
     }

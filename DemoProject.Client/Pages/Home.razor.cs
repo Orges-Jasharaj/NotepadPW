@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using Radzen;
+using System.Threading.Tasks;
 
 namespace DemoProject.Client.Pages
 {
@@ -95,7 +96,7 @@ namespace DemoProject.Client.Pages
         }
 
 
-        private void OnExecute(HtmlEditorExecuteEventArgs args)
+        private async Task OnExecute(HtmlEditorExecuteEventArgs args)
         {
             if (args.CommandName == "ChangeUrl")
             {
@@ -109,8 +110,33 @@ namespace DemoProject.Client.Pages
                 IsOpenPassword = true;
                 IsOpenPutPassword = false;
             }
+            else if(args.CommandName == "GeneratePdf")
+            {
+                await GeneratePdf();
+            }
         }
 
+
+        private async Task GeneratePdf()
+        {
+            try
+            {
+                var pdfData = await NoteService.DownloadPdf(url);
+                if (pdfData == null)
+                {
+                    await JSRuntime.InvokeVoidAsync("alert", "Error generating PDF!");
+                    return;
+                }
+                var base64 = Convert.ToBase64String(pdfData);
+
+                // Call JS to trigger download
+                await JSRuntime.InvokeVoidAsync("downloadFileFromBase64", $"{url}.pdf", base64);
+            }
+            catch (Exception ex)
+            {
+                await JSRuntime.InvokeVoidAsync("alert", $"Error generating PDF: {ex.Message}");
+            }
+        }
 
         CancellationTokenSource cancellationToken;
 

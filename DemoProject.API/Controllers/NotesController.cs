@@ -58,6 +58,19 @@ namespace DemoProject.API.Controllers
           return Ok( await _noteService.SummarizeNoteAsync(url));
         }
 
+        [Authorize]
+        [HttpGet("GeneratePdf/{url}")]
+        public async Task<IActionResult> GeneratePdf(string url)
+        {
+            var pdfStream = await _noteService.GeneratePdf(url);
+            if (pdfStream == null)
+            {
+                return NotFound();
+            }
+            return File(pdfStream, "application/pdf", $"{url}.pdf");
+        }
+
+
 
     }
 }

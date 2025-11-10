@@ -51,6 +51,12 @@
 
 	<RadzenHtmlEditorCustomTool CommandName="ChangeUrl" Icon="edit" />
 	<RadzenHtmlEditorCustomTool CommandName="SetPassword" Icon="password" />
+
+	<AuthorizeView>
+		<Authorized>
+			<RadzenHtmlEditorCustomTool CommandName="GeneratePdf" Icon="picture_as_pdf" />
+		</Authorized>
+	</AuthorizeView>
 </RadzenHtmlEditor>
 
 @* <ChangeUrlComponent Value="@url" isOpen="IsOpen" OnSave="OnModalSave"/>
