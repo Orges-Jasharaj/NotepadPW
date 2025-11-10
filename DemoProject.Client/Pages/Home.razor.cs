@@ -142,8 +142,6 @@ namespace DemoProject.Client.Pages
 
         CancellationTokenSource cancellationToken;
 
-
-
         protected override async Task OnInitializedAsync()
         {
             if (string.IsNullOrEmpty(url))

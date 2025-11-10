@@ -97,6 +97,6 @@
 	{
 		await JwtAuthenticationStateProvider.NotifyUserLogout();
 		// navigate to home after logout
-		NavigationManager.NavigateTo(NavigationManager.Uri, false);
+		NavigationManager.NavigateTo(NavigationManager.Uri, true);
 	}
 }

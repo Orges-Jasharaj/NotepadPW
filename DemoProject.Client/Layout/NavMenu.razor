@@ -1,4 +1,5 @@
-﻿@using DemoProject.Client.Service
+﻿@implements IDisposable
+@using DemoProject.Client.Service
 @using DemoProject.DataModels.Dto.Response
 <div class="top-row ps-3 navbar navbar-dark">
 	<div class="container-fluid">
@@ -41,12 +42,26 @@
 
 	private GetUserNoteResponseDto notes = new();
 
-	
+
 	protected async override Task OnInitializedAsync()
 	{
 		notes = await noteService.GetUserNotes();
+		// subscribe to updates
+		noteService.NotesUpdated += OnNotesUpdated;
 
-	 base.OnInitializedAsync();
+		base.OnInitializedAsync();
+	}
+
+	private async System.Threading.Tasks.Task OnNotesUpdated()
+	{
+		notes = await noteService.GetUserNotes();
+		StateHasChanged();
+	}
+
+	public void Dispose()
+	{
+		// unsubscribe
+		noteService.NotesUpdated -= OnNotesUpdated;
 	}
 
 

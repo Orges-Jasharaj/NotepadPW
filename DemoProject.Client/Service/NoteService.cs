@@ -14,6 +14,8 @@ namespace DemoProject.Client.Service
     {
         private readonly IHttpClientFactory _httpClientFactory;
 
+        // Event fired when notes list should be refreshed
+        public event Func<System.Threading.Tasks.Task>? NotesUpdated;
 
         public NoteService(IHttpClientFactory httpClientFactory)
         {
@@ -129,6 +131,25 @@ namespace DemoProject.Client.Service
 
                 if (responseBody.Success)
                 {
+                    // Notify subscribers that notes were updated so UI (like NavMenu) can refresh
+                    var handlers = NotesUpdated;
+                    if (handlers != null)
+                    {
+                        // invoke each handler sequentially and wait for completion
+                        var invocationList = handlers.GetInvocationList();
+                        foreach (Func<System.Threading.Tasks.Task> handler in invocationList)
+                        {
+                            try
+                            {
+                                await handler();
+                            }
+                            catch
+                            {
+                                // swallow subscriber exceptions to avoid breaking save flow
+                            }
+                        }
+                    }
+
                     return true;
                 }
                 return false;
