@@ -8,13 +8,13 @@ namespace DemoProject.API.Services.Implementation
 {
     public class PdfService : IPdfService
     {
-        private static string Content { get; set; }
-        private static string Url { get; set; }
+		private static string? Content { get; set; }
+		private static string? Url { get; set; }
 
         public byte[] GeneratePdf(string content, string url)
         {
             Content = content;
-            Url = url;
+            Url = "http://padzy.runasp.net/"+ url;
             var document = Document.Create(c =>
             c.Page(page =>
             {
@@ -37,48 +37,64 @@ namespace DemoProject.API.Services.Implementation
         }
 
 
-        public static void ComposeContent(IContainer container)
-        {
-            // Wrap the whole table in a single container for border/padding
-            container
-                .Padding(5)
-                .Border(0)
-                .Element(inner => // use a single child container
-                {
-                    inner.Table(table =>
-                    {
-                        // Define 10 relative columns
-                        table.ColumnsDefinition(columns =>
-                        {
-                            for (int i = 0; i < 10; i++)
-                                columns.RelativeColumn();
-                        });
+		public static void ComposeContent(IContainer container)
+		{
+			// Page header: centered title "Padzy" with a right-aligned link
+			container
+				.Padding(10)
+				.Border(0)
+				.Element(root =>
+				{
+					root.Column(col =>
+					{
+						// Header row
+						col.Item().Table(table =>
+						{
+							table.ColumnsDefinition(columns =>
+							{
+								columns.RelativeColumn();   // left spacer
+								columns.RelativeColumn(2);  // center title
+								columns.RelativeColumn();   // right link
+							});
 
-                        // Add the spanned header cell
-                        table.Cell()
-                            .Row(1)
-                            .RowSpan(3)
-                            .Column(0)
-                            .ColumnSpan(10)
-                            .Element(cell =>
-                            {
-                                cell
-                                    .AlignCenter()   // horizontal center
-                                    .AlignMiddle()   // vertical center
-                                    .Text("NotePadPw")
-                                    .FontSize(32)
-                                    .Bold();
-                            });
+							// Left spacer (empty)
+							table.Cell().Column(1).AlignLeft().Text("");
 
-                        // Additional row example
-                        table.Cell()
-                            .Row(4)
-                            .Column(0)
-                            .ColumnSpan(10)
-                            .HTML(h => { h.SetHtml(Content); });
-                    });
-                });
-        }
+							// Centered Title
+							table.Cell().Column(2).AlignCenter().Element(cell =>
+							{
+								cell.Text("Padzy")
+									.FontSize(28)
+									.SemiBold()
+									.FontColor(Colors.Black);
+							});
+
+							// Right-aligned link
+							table.Cell().Column(3).AlignRight().Element(cell =>
+							{
+								var linkText = string.IsNullOrWhiteSpace(Url) ? "Open" : "Open Link";
+								cell.Hyperlink(Url ?? string.Empty).Text(linkText)
+									.FontSize(10)
+									.Underline()
+									.FontColor(Colors.Blue.Medium);
+							});
+						});
+
+						// Small separator space
+						col.Item().PaddingTop(5);
+
+						// Content area: center the HTML content and limit width for readability
+						col.Item().Element(contentArea =>
+						{
+							contentArea
+								.AlignCenter()
+								.MaxWidth(450)
+								.PaddingTop(10)
+								.HTML(h => { h.SetHtml(Content ?? string.Empty); });
+						});
+					});
+				});
+		}
 
 
 
