@@ -8,6 +8,7 @@ namespace DemoProject.Client.Pages
 {
     public partial class Home
     {
+        
         string htmlValue = string.Empty;
         [Parameter]
         public string? url { get; set; }
@@ -19,6 +20,7 @@ namespace DemoProject.Client.Pages
         [Inject] NavigationManager Nav { get; set; } = null!;
         [Inject] NoteService NoteService { get; set; } = null!;
         [Inject] IJSRuntime JSRuntime { get; set; } = default!;
+        [Inject] NotificationServiceWrapper NotificationServiceWrapper { get; set; } = default!;    
 
         private bool IsOpen
         {
@@ -51,7 +53,7 @@ namespace DemoProject.Client.Pages
             }
             else
             {
-                await JSRuntime.InvokeVoidAsync("alert", "Error changing URL!");
+                NotificationServiceWrapper.ShowError("Error changing URL!");
             }
 
 
@@ -69,7 +71,7 @@ namespace DemoProject.Client.Pages
             var result = await NoteService.SetPassword(url, null, true);
             if (!result)
             {
-                await JSRuntime.InvokeVoidAsync("alert", "Error setting password!");
+                 NotificationServiceWrapper.ShowError("Error setting password!");
             }
         }
 
@@ -82,7 +84,7 @@ namespace DemoProject.Client.Pages
                 if (note.IsSecure && note.Content == null)
                 {
                     IsEditorDisabled = true;
-                    await JSRuntime.InvokeVoidAsync("alert", "Incorrect password!");
+                    NotificationServiceWrapper.ShowError("Incorrect password!");
                     IsOpenPutPassword = true;
                 }
                 else
@@ -124,7 +126,7 @@ namespace DemoProject.Client.Pages
                 var pdfData = await NoteService.DownloadPdf(url);
                 if (pdfData == null)
                 {
-                    await JSRuntime.InvokeVoidAsync("alert", "Error generating PDF!");
+                    NotificationServiceWrapper.ShowError("Error generating PDF!");
                     return;
                 }
                 var base64 = Convert.ToBase64String(pdfData);
@@ -134,7 +136,7 @@ namespace DemoProject.Client.Pages
             }
             catch (Exception ex)
             {
-                await JSRuntime.InvokeVoidAsync("alert", $"Error generating PDF: {ex.Message}");
+                NotificationServiceWrapper.ShowError("Error generating PDF!");
             }
         }
 
@@ -190,8 +192,10 @@ namespace DemoProject.Client.Pages
                     var result = await NoteService.CreateOrEditNoteAsync(url, html, NotePassword);
                     if (!result)
                     {
-                        await JSRuntime.InvokeVoidAsync("alert", "Error saving note!");
+                        NotificationServiceWrapper.ShowError("Error saving note!");
+                        return;
                     }
+                    NotificationServiceWrapper.ShowSuccess("Note saved successfully!");
                 }
             }
             catch (Exception e)

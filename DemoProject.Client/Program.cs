@@ -29,6 +29,9 @@ namespace DemoProject.Client
             builder.Services.AddScoped<AuthTokenHandler>();
             builder.Services.AddScoped<NoteService>(); 
             builder.Services.AddScoped<ManageService>();
+            builder.Services.AddScoped<NotificationService>();
+            builder.Services.AddScoped<NotificationServiceWrapper>();
+            builder.Services.AddScoped<DialogService>();
 
             var baseApiUrl = "http://padzyapi.runasp.net/";
            

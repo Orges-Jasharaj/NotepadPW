@@ -2,6 +2,10 @@
 @using DemoProject.Client.Pages.NotePadPW
 @using DemoProject.Client.Service
 
+<RadzenDialog></RadzenDialog>
+<RadzenNotification></RadzenNotification>
+
+
 <RadzenHtmlEditor @bind-Value=@htmlValue Input="OnInput" Execute="OnExecute" style="height: 450px;" Disabled="@IsEditorDisabled">
 	<RadzenHtmlEditorUndo />
 	<RadzenHtmlEditorRedo />
