@@ -8,6 +8,7 @@ using DemoProject.DataModels.Dto.System;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
 using System.Security.Claims;
@@ -61,7 +62,9 @@ namespace DemoProject.API
 
             builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection(JwtSettings.SectionName));
 
-            builder.Services.Configure<MailerSendSettings>(builder.Configuration.GetSection(MailerSendSettings.SectionName));
+            builder.Services.AddOptions<EmailOptions>()
+            .Bind(builder.Configuration.GetSection("Email"))
+    .ValidateDataAnnotations();
 
             builder.Services.AddScoped<IAuthService, AuthService>();
             builder.Services.AddScoped<IManageService, ManageService>();
@@ -84,11 +87,13 @@ namespace DemoProject.API
             
             builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
             {
-                //options.Password.RequireDigit = true;
-                //options.Password.RequiredLength = 6;
-                //options.Password.RequireLowercase = true;
-                //options.Password.RequireNonAlphanumeric = false;
-                //options.Password.RequireUppercase = true;
+                options.Password.RequireDigit = true;
+                options.Password.RequiredLength = 6;
+                options.Password.RequireLowercase = true;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = true;
+                options.SignIn.RequireConfirmedAccount = true;
+                options.SignIn.RequireConfirmedEmail = true;
             }).AddEntityFrameworkStores<ApplicationDbContext>()
             .AddDefaultTokenProviders();
 

@@ -1,15 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace DemoProject.DataModels.Dto.Request
 {
-    public class CreateNoteRequestDto
+    public class ForgotPasswordCommandDto
     {
-        public string Content { get; set; }
-        public string Url { get; set; }
-        public string? Password {get;set;}
+        [Required]
+        [EmailAddress]
+        public string Email { get; set; }   
     }
 }

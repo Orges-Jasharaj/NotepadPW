@@ -36,7 +36,7 @@ namespace DemoProject.Client.Pages.Auth
             var result = await AuthService.RegisterAsync(data);
             if (result.Success)
             {
-                NavigationManager.NavigateTo("/auth/login");
+                NavigationManager.NavigateTo("/auth/RegisterConfirmation");
             }
             else
             {

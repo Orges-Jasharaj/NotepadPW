@@ -66,5 +66,61 @@ namespace DemoProject.Client.Service
                 return false;
             }
         }
+
+        public async Task<ResponseDto<bool>> ForgeotPasswordAsync(ForgotPasswordCommandDto forgetPasswordCommandDto)
+        {
+            try
+            {
+                var client = _httpClientFactory.CreateClient("AuthApi");
+
+                var response = await client.PostAsJsonAsync("ForgotPassword", forgetPasswordCommandDto);
+                response.EnsureSuccessStatusCode();
+
+                var responseJson = await response.Content.ReadFromJsonAsync<ResponseDto<bool>>();
+                return responseJson;
+            }
+            catch (Exception ex)
+            {
+                return ResponseDto<bool>.Failure("An error occurred while creating User" + ex.Message);
+            }
+        }
+
+        public async Task<ResponseDto<bool>> ResetPasswordAsync(ResetPasswordCommandDto resetPasswordCommandDto)
+        {
+            try
+            {
+                var client = _httpClientFactory.CreateClient("AuthApi");
+
+                var response = await client.PostAsJsonAsync("ResetPassword", resetPasswordCommandDto);
+                response.EnsureSuccessStatusCode();
+
+                var resetPasswordResponse = await response.Content.ReadFromJsonAsync<ResponseDto<bool>>();
+                return resetPasswordResponse;
+            }
+            catch (Exception ex)
+            {
+                return ResponseDto<bool>.Failure("An error occurred while creating User" + ex.Message);
+            }
+        }
+
+        public async Task<ResponseDto<bool>> ConfirmEmailAsync(ConfirmEmailCommandDto confirmEmailCommandDto)
+        {
+            try
+            {
+                var client = _httpClientFactory.CreateClient("AuthApi");
+
+                var response = await client.PostAsJsonAsync("ConfirmEmail", confirmEmailCommandDto);
+                response.EnsureSuccessStatusCode();
+
+                var confirmEmailResponse = await response.Content.ReadFromJsonAsync<ResponseDto<bool>>();
+                return confirmEmailResponse;
+            }
+            catch (Exception ex)
+            {
+                return ResponseDto<bool>.Failure("An error occurred while creating User" + ex.Message);
+            }
+        }
+
+
     }
 }

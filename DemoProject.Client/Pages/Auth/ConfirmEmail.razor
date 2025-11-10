@@ -1,0 +1,85 @@
+﻿@page "/auth/ConfirmEmail"
+
+@using System.Text
+@using DemoProject.Client.Service
+@using DemoProject.DataModels.Dto.Request
+
+
+@layout AuthLayout
+
+<PageTitle>Confirm email</PageTitle>
+
+<div class="d-flex justify-content-center align-items-start" style="margin-top: 5vh;">
+    <div class="col-md-4">
+        <section class="text-center p-4 rounded shadow bg-white">
+            <h1>Confirm email</h1>
+            <StatusMessage Message="@statusMessage" />
+
+            @if (redirect)
+            {
+                <div>
+                    <p>
+                        <a href="auth/login">Go to login</a>
+                    </p>
+                </div>
+
+            }
+        </section>
+    </div>
+</div>
+
+
+
+@code {
+    private string? statusMessage;
+
+
+    [SupplyParameterFromQuery]
+    private string? UserId { get; set; }
+
+    [SupplyParameterFromQuery]
+    private string? Code { get; set; }
+
+    [Inject]
+    private NavigationManager NavigationManager { get; set; } = default!;
+    [Inject]
+    private AuthService AuthServices { get; set; } = default!;
+
+    private bool redirect { get; set; }
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (UserId is null || Code is null)
+        {
+            NavigationManager.NavigateTo("");
+        }
+
+        var code = Encoding.UTF8.GetString(Base64UrlDecode(Code));
+
+        var dto = new ConfirmEmailCommandDto
+        {
+            UserId = UserId,
+            Code = code
+        };
+
+        var result = await AuthServices.ConfirmEmailAsync(dto);
+        statusMessage = result.Success ? "Thank you for confirming your email." : "Error confirming your email.";
+
+        redirect = result.Success;
+    }
+    public static byte[] Base64UrlDecode(string base64Url)
+    {
+        string padded = base64Url
+            .Replace('-', '+')
+            .Replace('_', '/');
+
+        switch (padded.Length % 4)
+        {
+            case 2: padded += "=="; break;
+            case 3: padded += "="; break;
+        }
+
+        return Convert.FromBase64String(padded);
+    }
+}

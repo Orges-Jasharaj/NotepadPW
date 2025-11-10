@@ -2,7 +2,8 @@
 {
     public interface IEmailSender
     {
-        Task SendEmail(string to, string subject, string body);
-        Task SendEmailWithTemplateAsync(string to, string subject, string firstName, string lastName);
+        Task SendForgotEmailAsync(string toEmail, string url);
+        Task SendAccountConfirmationEmailAsync(string toEmail, string url);
+        Task SendChangeEmailPassword(string toEmail, string url);
     }
 }

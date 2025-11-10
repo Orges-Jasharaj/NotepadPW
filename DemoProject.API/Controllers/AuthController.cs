@@ -43,5 +43,24 @@ namespace DemoProject.API.Controllers
         {
             return Ok(await _authService.CreateUser(createUserDto));
         }
+
+        [HttpPost("ForgotPassword")]
+        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordCommandDto forgotPasswordDto)
+        {
+            return Ok(await _authService.ForgotPassword(forgotPasswordDto));
+        }
+
+        [HttpPost("ResetPassword")]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordCommandDto resetPassword)
+        {
+            return Ok(await _authService.ResetPassword(resetPassword));
+        }
+
+        [HttpPost("ConfirmEmail")]
+        public async Task<IActionResult> ConfirmEmail([FromBody] ConfirmEmailCommandDto confirmEmailDto)
+        {
+            return Ok(await _authService.ConfirmEmail(confirmEmailDto));
+
+        }
     }
 }

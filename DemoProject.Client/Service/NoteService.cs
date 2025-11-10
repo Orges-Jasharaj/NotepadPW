@@ -73,14 +73,15 @@ namespace DemoProject.Client.Service
         }
 
 
-        public async Task<bool> CreateOrEditNoteAsync(string url, string content)
+        public async Task<bool> CreateOrEditNoteAsync(string url, string content,string password)
         {
             try
             {
                 var dto = new CreateNoteRequestDto
                 {
                     Url = url,
-                    Content = content
+                    Content = content,
+                    Password = password
                 };
                 var client = _httpClientFactory.CreateClient("NoteApi");
 

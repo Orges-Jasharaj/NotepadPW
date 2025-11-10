@@ -35,7 +35,7 @@ namespace DemoProject.API.Services.Implementation
             if (result.Succeeded)
             {
                 _logger.LogInformation("Password changed successfully for user with ID: {UserId}", userId);
-                _emailSender.SendEmail(user.Email, "Password Changed", "Your password has been changed successfully.");
+                _emailSender.SendChangeEmailPassword(user.Email, "");
                 return ResponseDto<bool>.SuccessResponse(true, "Password changed successfully");
             }
             var errors = result.Errors.Select(e => new ApiError

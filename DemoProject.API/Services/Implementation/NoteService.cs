@@ -48,6 +48,36 @@ namespace DemoProject.API.Services.Implementation
 
                 return ResponseDto<bool>.SuccessResponse(true, "Note created successfully.");
             }
+
+            if (existingNote.IsSecure)
+            {
+                if (existingNote.UserId == userId)
+                {
+                    existingNote.Content = createNoteRequestDto.Content;
+                    existingNote.UpdatedAt = DateTime.UtcNow;
+                    existingNote.ShortDescription = GenerateShortDescription(createNoteRequestDto.Content);
+                    _context.Notes.Update(existingNote);
+                    await _context.SaveChangesAsync();
+                    _logger.LogInformation("Note updated with URL: {Url}", createNoteRequestDto.Url);
+                    return ResponseDto<bool>.SuccessResponse(true, "Note updated successfully.");
+                }
+                else if (await VerifyPassword(existingNote.PasswordHash, createNoteRequestDto.Password))
+                {
+
+                    existingNote.Content = createNoteRequestDto.Content;
+                    existingNote.UpdatedAt = DateTime.UtcNow;
+                    existingNote.ShortDescription = GenerateShortDescription(createNoteRequestDto.Content);
+                    _context.Notes.Update(existingNote);
+                    await _context.SaveChangesAsync();
+                    _logger.LogInformation("Note updated with URL: {Url}", createNoteRequestDto.Url);
+                    return ResponseDto<bool>.SuccessResponse(true, "Note updated successfully.");
+                }
+                else
+                {
+                    return ResponseDto<bool>.Failure("Cannot update secure note without proper authorization.");
+                }
+
+            }
             existingNote.Content = createNoteRequestDto.Content;
             existingNote.UpdatedAt = DateTime.UtcNow;
             existingNote.ShortDescription = GenerateShortDescription(createNoteRequestDto.Content);
@@ -85,7 +115,7 @@ namespace DemoProject.API.Services.Implementation
                               "Note retrieved successfully.");
                     }
                 }
-                else if(!string.IsNullOrEmpty(getNoteByUrlRequestDto.Passwrod))
+                else if (!string.IsNullOrEmpty(getNoteByUrlRequestDto.Passwrod))
                 {
 
                     var isPasswordValid = await VerifyPassword(existingNote.PasswordHash, getNoteByUrlRequestDto.Passwrod);
@@ -213,7 +243,7 @@ namespace DemoProject.API.Services.Implementation
                 return ResponseDto<bool>.Failure("Note not found");
             }
 
-    
+
 
             if (!string.IsNullOrEmpty(setPasswordDto.Password))
             {
@@ -226,7 +256,7 @@ namespace DemoProject.API.Services.Implementation
             }
 
 
-             _context.Notes.Update(existNote);
+            _context.Notes.Update(existNote);
             await _context.SaveChangesAsync();
 
             return ResponseDto<bool>.SuccessResponse(true, "Password set successfully");
@@ -235,9 +265,12 @@ namespace DemoProject.API.Services.Implementation
 
         }
 
-        public async Task<bool> VerifyPassword(string hashedPassword, string password)
+        public async Task<bool> VerifyPassword(string? hashedPassword, string? password)
         {
-
+            if (string.IsNullOrEmpty(hashedPassword) || string.IsNullOrEmpty(password))
+            {
+                return false;
+            }
             return BCrypt.Net.BCrypt.Verify(password, hashedPassword);
         }
 

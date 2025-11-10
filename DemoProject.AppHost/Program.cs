@@ -12,6 +12,7 @@ var builder = DistributedApplication.CreateBuilder(args);
 //    });
 
 
+var mailput = builder.AddMailPit("mailpit", 8025, 1025).WithDataVolume("mailpit-data");
 
 var api = builder.AddProject<Projects.DemoProject_API>("api",launchProfileName:"https");
 var client = builder.AddProject<Projects.DemoProject_Client>("client", launchProfileName: "https")

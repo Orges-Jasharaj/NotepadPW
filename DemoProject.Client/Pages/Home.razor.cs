@@ -12,6 +12,7 @@ namespace DemoProject.Client.Pages
         public string? url { get; set; }
         public string? password { get; set; }
         public string passwordToOpen { get; set; }
+        private string NotePassword { get; set; }
         private bool IsEditorDisabled { get; set; }
 
         [Inject] NavigationManager Nav { get; set; } = null!;
@@ -48,6 +49,7 @@ namespace DemoProject.Client.Pages
         private async Task OnModalSavePassword(string password)
         {
             var result = await NoteService.SetPassword(url, password);
+            NotePassword = password;
 
         }
 
@@ -76,6 +78,7 @@ namespace DemoProject.Client.Pages
                 {
                     IsEditorDisabled = false;
                     IsOpenPutPassword = false;
+                    NotePassword = password;
                     htmlValue = note.Content;
                 }
             }
@@ -148,7 +151,7 @@ namespace DemoProject.Client.Pages
 
                 if (!token.IsCancellationRequested)
                 {
-                    var result = await NoteService.CreateOrEditNoteAsync(url, html);
+                    var result = await NoteService.CreateOrEditNoteAsync(url, html, NotePassword);
                     if (!result)
                     {
                         await JSRuntime.InvokeVoidAsync("alert", "Error saving note!");

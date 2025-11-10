@@ -10,5 +10,12 @@ namespace DemoProject.API.Services.Interface
         Task<ResponseDto<LoginResponseDto>> LoginUser(LoginRequestDto loginDto);
 
         Task<ResponseDto<LoginResponseDto>> RefreshToken(RefreshTokenRequestDto refreshTokenDto);
+
+        Task<ResponseDto<bool>> ForgotPassword(ForgotPasswordCommandDto forgotPasswordCommandDto);
+        
+        Task<ResponseDto<bool>> ResetPassword(ResetPasswordCommandDto resetPasswordCommandDto);
+        Task<ResponseDto<bool>> ConfirmEmail(ConfirmEmailCommandDto confirmEmailCommandDto);
+
+
     }
 }
