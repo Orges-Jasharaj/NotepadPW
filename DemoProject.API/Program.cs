@@ -116,9 +116,9 @@ namespace DemoProject.API
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-            builder.Services.AddScoped<INoteService , NoteService >();
+            builder.Services.AddScoped<INoteService, NoteService>();
             builder.Services.AddScoped<ITokenService, TokenService>();
-            
+
             builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
             {
                 options.Password.RequireDigit = true;
@@ -163,20 +163,24 @@ namespace DemoProject.API
             builder.Services.AddControllers();
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
             builder.Services.AddOpenApi();
-            
-            builder.Services.AddCors(x => {
+
+            builder.Services.AddCors(x =>
+            {
                 x.AddPolicy("DemoClient",
-                    y => {
+                    y =>
+                    {
                         y.AllowAnyOrigin()
                         .AllowAnyHeader()
                         .AllowAnyMethod();
-                        
+
                     });
 
             });
-            builder.Services.AddCors(x => {
+            builder.Services.AddCors(x =>
+            {
                 x.AddPolicy("PadzyUI",
-                    y => {
+                    y =>
+                    {
                         y.AllowAnyHeader()
                          .AllowAnyMethod()
                          .WithOrigins("http://padzy.runasp.net");
@@ -188,7 +192,7 @@ namespace DemoProject.API
 
             app.MapDefaultEndpoints();
 
-            app.UseCors("PadzyUI");
+
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
@@ -200,13 +204,16 @@ namespace DemoProject.API
                     app.SwaggerEndpoint("/swagger/v1/swagger.json", "Demo API V1");
                 });
             }
-
+            else
+            {
+                app.UseCors("PadzyUI");
+            }
             app.UseHttpsRedirection();
 
 
 
             app.UseMiddleware<ExceptionHandlingMiddleware>();
-            
+
             app.UseAuthentication();
             app.UseAuthorization();
 
