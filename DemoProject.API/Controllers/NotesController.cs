@@ -70,6 +70,12 @@ namespace DemoProject.API.Controllers
             return File(pdfStream, "application/pdf", $"{url}.pdf");
         }
 
+        [Authorize]
+        [HttpDelete("{url}")]
+        public async Task<IActionResult> DeleteNote(string url)
+        {
+            return Ok(await _noteService.DeleteNote(url));
+        }
 
 
     }

@@ -333,5 +333,24 @@ Do not add extra commentary — only return the summary text.";
             var pdfBytes = _pdfService.GeneratePdf(note.Content, note.Url);
             return pdfBytes;
         }
+
+        public async Task<ResponseDto<bool>> DeleteNote(string url)
+        {
+            var userId = _claimsService.GetCurrentUserId();
+            if (string.IsNullOrEmpty(userId))
+            {
+                return ResponseDto<bool>.Failure("Not authenticated");
+            }
+
+            var note = await _context.Notes.FirstOrDefaultAsync(n => n.Url == url && n.UserId == userId);
+            if (note == null)
+            {
+                return ResponseDto<bool>.Failure("Note not found or not owned by user");
+            }
+
+            _context.Notes.Remove(note);
+            await _context.SaveChangesAsync();
+            return ResponseDto<bool>.SuccessResponse(true, "Note deleted");
+        }
     }
 }

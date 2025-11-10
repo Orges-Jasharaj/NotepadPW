@@ -12,6 +12,7 @@ namespace DemoProject.API.Services.Interface
         Task<ResponseDto<bool>> SetPassword(SetPasswordDto password);
         Task<ResponseDto<string>> SummarizeNoteAsync(string url);
         Task<byte[]> GeneratePdf(string url);
+        Task<ResponseDto<bool>> DeleteNote(string url);
 
     }
 }

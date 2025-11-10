@@ -235,5 +235,43 @@ namespace DemoProject.Client.Service
                 return null;
             }
         }
+
+        public async Task<bool> DeleteNoteAsync(string url)
+        {
+            try
+            {
+                var client = _httpClientFactory.CreateClient("NoteApi");
+                var response = await client.DeleteAsync($"{url}");
+                response.EnsureSuccessStatusCode();
+                var responseBody = await response.Content.ReadFromJsonAsync<ResponseDto<bool>>();
+                if (responseBody != null && responseBody.Success)
+                {
+                    // notify subscribers
+                    var handlers = NotesUpdated;
+                    if (handlers != null)
+                    {
+                        var invocationList = handlers.GetInvocationList();
+                        foreach (Func<System.Threading.Tasks.Task> handler in invocationList)
+                        {
+                            try
+                            {
+                                await handler();
+                            }
+                            catch
+                            {
+                            }
+                        }
+                    }
+
+                    return true;
+                }
+
+                return false;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
     }
 }
