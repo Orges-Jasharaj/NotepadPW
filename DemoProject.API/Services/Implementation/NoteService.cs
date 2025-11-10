@@ -1,10 +1,12 @@
-﻿using DemoProject.API.Data;
+﻿using BCrypt.Net;
+using DemoProject.API.Data;
 using DemoProject.API.Data.Models;
 using DemoProject.API.Services.Interface;
 using DemoProject.DataModels.Dto.Request;
 using DemoProject.DataModels.Dto.Response;
 using Microsoft.EntityFrameworkCore;
-using BCrypt.Net;
+using Microsoft.Extensions.AI;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace DemoProject.API.Services.Implementation
@@ -14,13 +16,15 @@ namespace DemoProject.API.Services.Implementation
         private readonly ApplicationDbContext _context;
         private readonly ILogger<NoteService> _logger;
         private readonly IClaimsService _claimsService;
+        private readonly IChatClient _chatClient;
 
 
-        public NoteService(ApplicationDbContext context, ILogger<NoteService> logger, IClaimsService claimsService)
+        public NoteService(ApplicationDbContext context, ILogger<NoteService> logger, IClaimsService claimsService, IChatClient chatClient)
         {
             _context = context;
             _logger = logger;
             _claimsService = claimsService;
+            _chatClient = chatClient;
         }
 
 
@@ -274,5 +278,37 @@ namespace DemoProject.API.Services.Implementation
             return BCrypt.Net.BCrypt.Verify(password, hashedPassword);
         }
 
+        public async Task<ResponseDto<string>> SummarizeNoteAsync(string url)
+        {
+            var note = await _context.Notes.FirstOrDefaultAsync(x => x.Url == url);
+
+            if (note == null || string.IsNullOrEmpty(note.Content))
+            {
+                return ResponseDto<string>.Failure("");
+            }
+
+            string plainText = Regex.Replace(note.Content, "<.*?>", string.Empty);
+            plainText = System.Net.WebUtility.HtmlDecode(plainText).Trim();
+
+            string systemPrompt = @"
+You are a professional writing assistant that summarizes notes into concise, clear, and informative short descriptions.
+Focus on main idea and key details. Keep summary under 30 words.
+Do not add extra commentary — only return the summary text.";
+
+            var messages = new List<ChatMessage>
+        {
+            new ChatMessage(ChatRole.System, systemPrompt),
+            new ChatMessage(ChatRole.User, plainText)
+        };
+
+            var responseText = "";
+            await foreach (var update in _chatClient.GetStreamingResponseAsync(messages))
+            {
+                var chunk = $"data: {update.Text}\n\n";
+                responseText += update.Text;
+            }
+
+            return ResponseDto<string>.SuccessResponse(responseText);
+        }
     }
 }

@@ -9,7 +9,8 @@ namespace DemoProject.API.Services.Interface
         Task<ResponseDto<GetNoteByUrlDto>> GetNoteByUrl(GetNoteByUrlRequestDto getNoteByUrlRequestDto);
         Task<ResponseDto<bool>> ChangeUrl(ChangeUrlRequestDto changeUrlDto);
         Task<ResponseDto<GetUserNoteResponseDto>> GetUserNotes();
-        Task<ResponseDto<bool>> SetPassword(SetPasswordDto password);   
+        Task<ResponseDto<bool>> SetPassword(SetPasswordDto password);
+        Task<ResponseDto<string>> SummarizeNoteAsync(string url);
 
     }
 }

@@ -50,6 +50,14 @@ namespace DemoProject.API.Controllers
             return Ok(await _noteService.SetPassword(setPassword));
         }
 
+        [Authorize]
+        [HttpGet("Summarize/{url}")]
+        public async Task<IActionResult> SumurizeNoteStream(string url)
+        {
+
+          return Ok( await _noteService.SummarizeNoteAsync(url));
+        }
+
 
     }
 }

@@ -49,7 +49,7 @@
 	<RadzenHtmlEditorSeparator />
 
 
-	<RadzenHtmlEditorCustomTool CommandName="ChangeUrl" Icon="edit"/>
+	<RadzenHtmlEditorCustomTool CommandName="ChangeUrl" Icon="edit" />
 	<RadzenHtmlEditorCustomTool CommandName="SetPassword" Icon="password" />
 </RadzenHtmlEditor>
 
@@ -75,7 +75,22 @@
 					  OnSave="OnModalSavePutPassword"
 					  OnClose="() => IsOpenPutPassword = false" />
 
-@* <button class="btn btn-primary" @onclick="OnButtonClick">CHANGE URL</button> *@
+
+<AuthorizeView>
+	<Authorized>
+		<button class="floating-button" @onclick="OpenSummarizePanel">
+			✏️ Summarize
+		</button>
+
+		<SummarizeComponent Text="@noteSummary" IsOpen="@showPanel"
+							IsLoading="@IsLoading"
+							OnClose="@(() => { showPanel = false; })" />
+	</Authorized>
+
+</AuthorizeView>
+
+
+
 
 
 

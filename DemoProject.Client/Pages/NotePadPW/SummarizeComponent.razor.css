@@ -1,0 +1,55 @@
+﻿.popup-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    display: grid;
+    place-items: center;
+    z-index: 1000;
+}
+
+.popup {
+    background: #fff;
+    padding: 1rem;
+    width: 400px;
+    max-width: 90vw;
+    border-radius: 8px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+}
+
+/* Spinner Styling */
+.spinner-container {
+    padding: 50px;
+    text-align: center;
+}
+
+.spinner {
+    border: 4px solid rgba(0, 0, 0, 0.1);
+    border-top: 4px solid #333;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 10px auto;
+}
+
+.popup-textarea {
+    width: 100%;
+    min-height: 180px;
+    resize: none;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    padding: 10px;
+    font-size: 0.95rem;
+    font-family: inherit;
+    color: #333;
+    background: #fafafa;
+}
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}

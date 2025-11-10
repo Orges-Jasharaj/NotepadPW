@@ -1,7 +1,9 @@
 ﻿using DemoProject.DataModels.Dto.Request;
 using DemoProject.DataModels.Dto.Response;
+using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
+using static System.Net.WebRequestMethods;
 
 namespace DemoProject.Client.Service
 {
@@ -15,7 +17,7 @@ namespace DemoProject.Client.Service
             _httpClientFactory = httpClientFactory;
         }
 
-        public async Task<GetNoteByUrlDto?> GetNoteByUrl(string url,string password = null)
+        public async Task<GetNoteByUrlDto?> GetNoteByUrl(string url, string password = null)
         {
             try
             {
@@ -47,6 +49,35 @@ namespace DemoProject.Client.Service
             }
         }
 
+
+        public async Task<string> SummarizeNoteAsync(string url)
+        {
+            try
+            {
+                var client = _httpClientFactory.CreateClient("NoteApi");
+               
+
+                var response = await client.GetAsync($"Summarize/{url}");
+
+                response.EnsureSuccessStatusCode();
+
+                var noteResponse = await response.Content.ReadFromJsonAsync<ResponseDto<string>>();
+
+                //var note = JsonSerializer.Deserialize<ResponseDto<string>>(noteResponse);
+
+                if (noteResponse.Success)
+                {
+                    return noteResponse.Data;
+                }
+                return string.Empty;
+
+            }
+            catch (Exception ex)
+            {
+                return string.Empty;
+            }
+        }
+
         public async Task<bool> ChangeUrlAsync(string oldUrl, string newUrl)
         {
             try
@@ -73,7 +104,7 @@ namespace DemoProject.Client.Service
         }
 
 
-        public async Task<bool> CreateOrEditNoteAsync(string url, string content,string password)
+        public async Task<bool> CreateOrEditNoteAsync(string url, string content, string password)
         {
             try
             {
@@ -131,7 +162,7 @@ namespace DemoProject.Client.Service
             }
         }
 
-        public async Task<bool> SetPassword(string url, string password, bool proctecme=false)
+        public async Task<bool> SetPassword(string url, string password, bool proctecme = false)
         {
 
             try

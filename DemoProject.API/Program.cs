@@ -8,9 +8,13 @@ using DemoProject.DataModels.Dto.System;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.AI;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using OpenAI;
+using OpenAI.Chat;
 using Serilog;
+using System.ClientModel;
 using System.Security.Claims;
 using System.Text;
 
@@ -70,6 +74,40 @@ namespace DemoProject.API
             builder.Services.AddScoped<IManageService, ManageService>();
             builder.Services.AddScoped<IEmailSender, EmailSenderService>();
             builder.Services.AddScoped<IClaimsService, ClaimsService>();
+
+
+            var githubToken = builder.Configuration["GitHubModels:Token"]
+                ?? throw new InvalidOperationException("Missing configuration: GitHubModels:Token");
+
+            var endpoint = new Uri("https://models.inference.ai.azure.com");
+
+            // Register Scoped IChatClient
+            builder.Services.AddScoped<IChatClient>(sp =>
+            {
+                var credential = new ApiKeyCredential(githubToken);
+                var clientOptions = new OpenAIClientOptions { Endpoint = endpoint };
+                var openAiClient = new OpenAIClient(credential, clientOptions);
+
+                // Use GitHub-hosted GPT model
+                var chatClient = openAiClient.GetChatClient("gpt-4o-mini").AsIChatClient();
+
+                // Add useful middleware
+                //chatClient.UseFunctionInvocation();
+                //chatClient.UseLogging();
+
+                return chatClient;
+            });
+
+            // Register Scoped IEmbeddingGenerator
+            builder.Services.AddScoped<IEmbeddingGenerator>(sp =>
+            {
+                var credential = new ApiKeyCredential(githubToken);
+                var clientOptions = new OpenAIClientOptions { Endpoint = endpoint };
+                var openAiClient = new OpenAIClient(credential, clientOptions);
+
+                var embeddingClient = openAiClient.GetEmbeddingClient("text-embedding-3-small").AsIEmbeddingGenerator();
+                return embeddingClient;
+            });
 
 
 
